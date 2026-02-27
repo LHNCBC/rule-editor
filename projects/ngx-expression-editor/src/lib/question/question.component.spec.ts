@@ -1,11 +1,7 @@
 import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 
 import { QuestionComponent } from './question.component';
-import { SyntaxPreviewComponent } from '../syntax-preview/syntax-preview.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
 
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
@@ -13,8 +9,9 @@ describe('QuestionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuestionComponent, SyntaxPreviewComponent, ExpressionValidatorDirective ],
-      imports: [ FormsModule, MatSnackBarModule ]
+      declarations: [],
+      imports: [QuestionComponent]
+
     })
     .compileComponents();
   }));

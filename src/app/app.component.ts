@@ -1,18 +1,21 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import Def from 'autocomplete-lhc';
 import { environment } from '../environments/environment';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { createDisplayOption } from '../assets/js/common-utils.js';
+import { ExpressionEditorComponent } from 'ngx-expression-editor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, ExpressionEditorComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('autoComplete', {static: false}) autoCompleteElement: ElementRef;
@@ -73,11 +76,11 @@ export class AppComponent implements OnInit, OnDestroy {
   displayExpressionEditor = false;
   displayExpressionEditorResult = false;
 
-  constructor(private http: HttpClient,
-              private liveAnnouncer: LiveAnnouncer,
-              private changeDetectorRef: ChangeDetectorRef,
-              private activatedRoute: ActivatedRoute,
-              private titleService: Title) {}
+  private http = inject(HttpClient);
+  private liveAnnouncer = inject(LiveAnnouncer);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private activatedRoute = inject(ActivatedRoute);
+  private titleService = inject(Title);
 
   /**
    * Angular lifecycle hook called when the component is initialized
@@ -218,13 +221,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Generate the autocomplete list 
+   * Generate the autocomplete list
    */
   composeAutocomplete(): void {
     const keys = this.linkIds.map(e => e.text);
     const vals = this.linkIds.map(v => v.linkId);
 
-    let opts = {
+    const opts = {
       tableFormat: false,
       codes: vals
     }
@@ -254,7 +257,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param level - Depth of item nesting, starting at 0
    * @return Array of link IDs.
    */
-  getQuestionnaireLinkIds(items, level = 0): Array<string> {
+  getQuestionnaireLinkIds(items, level = 0): string[] {
     let linkIds = [];
 
     items.forEach((item) => {
@@ -347,20 +350,20 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.canOpenExpressionEditor()) {
       this.displayExpressionEditor = true;
       this.displayExpressionEditorResult = false;
-  
+
       // The lhc-expression-editor component is not presented before the
       // 'Open Expression Editor' button is clicked due to the use of *ngIf.
-      // The attributes for the lhc-expression-editor component are not 
-      // getting updated as a result. The below steps are used to 
-      // trigger changes to those attributes. 
+      // The attributes for the lhc-expression-editor component are not
+      // getting updated as a result. The below steps are used to
+      // trigger changes to those attributes.
       const tmpUserExpressionChoices = this.userExpressionChoices;
       const tmpCustomExpressionUri = this.customExpressionUri;
-   
+
       this.userExpressionChoices = null;
       this.customExpressionUri = null;
-  
+
       this.changeDetectorRef.detectChanges();
-  
+
       this.userExpressionChoices = tmpUserExpressionChoices;
       this.customExpressionUri = tmpCustomExpressionUri;
     }

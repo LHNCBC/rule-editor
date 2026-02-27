@@ -44,7 +44,7 @@ describe(Cypress.env("appName"), () => {
             cy.get('#variable-type-4').select('FHIR Query (Observation)');
 
             cy.get('lhc-query-observation').shadow().within(() => {
-              // Clear the Time Interval, this should result in the Time Interval 
+              // Clear the Time Interval, this should result in the Time Interval
               // textbox highlighted in red.
               cy.get('div.time-input input').clear().should('have.class', 'field-error');
               // And the error message
@@ -61,7 +61,7 @@ describe(Cypress.env("appName"), () => {
             });
           });
           // The 'Save' button should be enabled
-          cy.get('#export').should('not.have.class', 'disabled');       
+          cy.get('#export').should('not.have.class', 'disabled');
 
           // Add variable of variable type "Question"
           cy.get('#add-variable').click();
@@ -77,7 +77,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('div#row-6').within(() => {
             cy.get('#variable-label-6').clear().type('g_simple');
             cy.get('#variable-type-6').select('Easy Path Expression');
-          });      
+          });
 
           // Click 'Save', the validation should get triggered to validate each of the expressions
           cy.get('#export').click();
@@ -199,7 +199,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('div#row-1').within(() => {
             // Clear out the selection for variable 'b' and the error should display.
             cy.get('#question-1').clear();
-     
+
             // Need to click outside of the element.
             cy.get('#variable-label-1').click();
 
@@ -246,7 +246,7 @@ describe(Cypress.env("appName"), () => {
             cy.get('#simple-expression-3').type('zzz');
             cy.get('#simple-expression-3').should('have.class', 'field-error');
             cy.get('#expression-error > p').should('contain.text', constants.INVALID_EXPRESSION);
-          });      
+          });
 
           // The 'Save' button should be disabled
           cy.get('#export').should('have.class', 'disabled');
@@ -259,7 +259,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('div#row-3').within(() => {
             cy.get('#simple-expression-3').clear().type('a');
             cy.get('#simple-expression-3').should('not.have.class', 'field-error');
-          }); 
+          });
 
           // The 'Save' button should be enabled
           cy.get('#export').should('not.have.class', 'disabled');
@@ -284,7 +284,7 @@ describe(Cypress.env("appName"), () => {
           // Add variable c
           cy.get('#add-variable').click();
           cy.get('#variables-section .variable-row').should('have.length', 3);
-        
+
           // Select 'Easy Path Expression' variable type for the newly added variable
           cy.get('div#row-2').within(() => {
             cy.get('#variable-type-2').select('Easy Path Expression');
@@ -294,7 +294,7 @@ describe(Cypress.env("appName"), () => {
             cy.get('#simple-expression-2').should('have.class', 'field-error');
             cy.get('#expression-error > p').should('contain.text', 'Invalid expression.');
 
-            // Converting the invalid expression variable to variable type to 'FHIRPath Expression' 
+            // Converting the invalid expression variable to variable type to 'FHIRPath Expression'
             // should result in the empty FHIRPath expression
             cy.get('#variable-type-2').select('FHIRPath Expression');
             // The expression should be empty and should not have an error
@@ -316,7 +316,7 @@ describe(Cypress.env("appName"), () => {
         // The Expression Editor dialog should now appear
         cy.get('lhc-expression-editor').shadow().within(() => {
           cy.get('#expression-editor-base-dialog').should('exist');
-      
+
           // Variables section
           cy.get('lhc-variables > h2').should('contain', 'Item Variables');
           cy.get('#variables-section .variable-row').should('have.length', 2);
@@ -324,7 +324,7 @@ describe(Cypress.env("appName"), () => {
           // Add variable c
           cy.get('#add-variable').click();
           cy.get('#variables-section .variable-row').should('have.length', 3);
-        
+
           // Select 'Easy Path Expression' variable type for the newly added variable
           cy.get('div#row-2').within(() => {
             cy.get('#variable-type-2').select('Easy Path Expression');
@@ -401,7 +401,7 @@ describe(Cypress.env("appName"), () => {
 
           // The 'Save' button should be enabled
           cy.get('#export').should('exist').should('not.have.class', 'disabled');
-        
+
           // Change the expression to reference invalid variable name 'ccc'
           cy.get('#simple-expression-final').clear().type('ccc/b^2');
 
@@ -453,7 +453,7 @@ describe(Cypress.env("appName"), () => {
 
           // The 'Save' button should be enabled
           cy.get('#export').should('exist').should('not.have.class', 'disabled');
-          
+
           // Change the expression to reference invalid variable name 'ccc'
           cy.get('#final-expression').clear().type('(%ccc/(%b.power(2))).round(1)');
 
@@ -467,7 +467,7 @@ describe(Cypress.env("appName"), () => {
 
       it('should display error and disable "Save" button if failed FHIRPath Expression validation', () => {
         cy.get('select#questionnaire-select').select('Upload your own questionnaire');
-  
+
         cy.get('#file-upload').attachFile('bmisimple.json');
 
         // Updating the linkId should update the Expression Editor instantly
@@ -481,7 +481,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('#expression-editor-base-dialog').should('exist');
         });
 
-        // The 'Output Expression' should be default to 'Calculated Expression' 
+        // The 'Output Expression' should be default to 'Calculated Expression'
         cy.get('#expression-entry > select').should('have.value', '1');
 
         cy.get('lhc-expression-editor').shadow().within(() => {
@@ -554,9 +554,9 @@ describe(Cypress.env("appName"), () => {
           cy.get('.default').should('not.have.class', 'field-error');
 
           // The output expression is displayed
-          cy.get('lhc-case-statements lhc-syntax-preview > div > div > pre').should('contain.text', 
+          cy.get('lhc-case-statements lhc-syntax-preview > div > div > pre').should('contain.text',
             `iif(%b<18.5,'underweight',iif(%b<25,'normal',iif(%b<30,'overweight','obese')))`);
-            
+
           // The 'Save' button should be enabled
           cy.get('#export').should('not.have.class', 'disabled');
         });
@@ -564,7 +564,7 @@ describe(Cypress.env("appName"), () => {
 
       it('should still display error and disable "Save" button when switching case from Easy Path Expression (with errors) to FHIRPath Expression', () => {
         cy.get('select#questionnaire-select').select('Upload your own questionnaire');
-  
+
         cy.get('#file-upload').attachFile('bmisimple.json');
 
         // Updating the linkId should update the Expression Editor instantly
@@ -578,7 +578,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('#expression-editor-base-dialog').should('exist');
         });
 
-        // The 'Output Expression' should be default to 'Calculated Expression' 
+        // The 'Output Expression' should be default to 'Calculated Expression'
         cy.get('#expression-entry > select').should('have.value', '1');
 
         cy.get('lhc-expression-editor').shadow().within(() => {
@@ -615,7 +615,7 @@ describe(Cypress.env("appName"), () => {
 
           // Empty first case output
           cy.get('#case-output-0').clear();
-          // Empty second case condition 
+          // Empty second case condition
           cy.get('#case-condition-1').clear();
           // Empty the default output
           cy.get('.default').clear();
@@ -624,7 +624,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('#case-output-0').should('have.class', 'field-error');
           cy.get('#case-condition-1').should('have.class', 'field-error');
           cy.get('.default').should('have.class', 'field-error');
-          
+
           // The 'Save' button should be disabled
           cy.get('#export').should('have.class', 'disabled');
 

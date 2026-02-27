@@ -1,19 +1,21 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild,
-         ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
+         ViewChildren, QueryList, AfterViewInit, OnDestroy, inject} from '@angular/core';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CASE_REGEX, CaseStatement, ValidationError, Variable, FieldTypes, SectionTypes, CaseStatementValidationResult } from '../variable';
 import { EasyPathExpressionsPipe } from '../easy-path-expressions.pipe';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import * as fhirpath from 'fhirpath';
 import * as constants from "../validation";
+import { SyntaxPreviewComponent } from '../syntax-preview/syntax-preview.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lhc-case-statements',
   templateUrl: './case-statements.component.html',
   styleUrls: ['../expression-editor.component.css', './case-statements.component.css'],
-  standalone: false
+  imports: [CommonModule, DragDropModule, FormsModule, SyntaxPreviewComponent]
 })
 export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() lhcStyle: SimpleStyle = {};
@@ -35,7 +37,8 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
   outputExpressions = true;
   defaultCase: string;
   simpleDefaultCase: string;
-  cases: Array<CaseStatement> = [{ condition: '', simpleCondition: '', output: '', simpleOutput: '' }];
+  //cases: Array<CaseStatement> = [{ condition: '', simpleCondition: '', output: '', simpleOutput: '' }];
+  cases: CaseStatement[] = [{ condition: '', simpleCondition: '', output: '', simpleOutput: '' }];
 
   output = '';
   hidePreview = false;
@@ -54,9 +57,9 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
 
   simpleCaseObject;
 
-  constructor(private expressionEditorService: ExpressionEditorService,
-              private liveAnnouncer: LiveAnnouncer,
-              private changeDetectorRef: ChangeDetectorRef) {}
+  private expressionEditorService = inject(ExpressionEditorService);
+  private liveAnnouncer = inject(LiveAnnouncer);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   /**
    * Angular lifecycle hook for initialization
@@ -73,13 +76,13 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
     // performValidationSubscription is triggered when the 'Save' button is clicked, allowing each
     // subscribed component to validate the expression data.
     this.performValidationSubscription = this.expressionEditorService.performValidationChange.subscribe((validation) => {
-      this.caseConditionRefs.forEach((cc, index) => {
+      this.caseConditionRefs.forEach((cc) => {
         if (!cc.control.value || cc.control.value === "") {
           cc.control.markAsTouched();
           cc.control.markAsDirty();
         }
       });
-      this.caseOutputRefs.forEach((co, index) => {
+      this.caseOutputRefs.forEach((co) => {
         if (!co.control.value || co.control.value === "") {
           co.control.markAsTouched();
           co.control.markAsDirty();
@@ -102,7 +105,7 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
   }
 
   /**
-   * Perform check on any Case statement errors 
+   * Perform check on any Case statement errors
    */
   ngAfterViewInit() {
     this.changeDetectorRef.detectChanges();
@@ -274,7 +277,7 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
   };
 
   /**
-   * Set error or null (no error) for the given element.  
+   * Set error or null (no error) for the given element.
    * @param element - the case element
    * @param index - case statement index
    * @param type - case element type: 'condition' or 'output'
@@ -330,7 +333,7 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
         (c.control.value) ||
         (caseError && caseError?.[type] && caseError[type] !== ExpressionEditorService.EXP_REQUIRED_ERR_MSG) ||
         (caseError[type] === ExpressionEditorService.EXP_REQUIRED_ERR_MSG && caseTokens[tokenIndex].indexOf(ExpressionEditorService.EXP_REQUIRED_ERR_MSG) > -1)) {
-        
+
         result = this.setElementError(c, index, type);
       }
     });
@@ -538,10 +541,10 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
 
   /**
    * Check results from calling transformIfSimple() on ctransformIfSimplease statement condition, output, and default case
-   * and set the error if any. If the result from the transformation is blank, then the error is now set 
+   * and set the error if any. If the result from the transformation is blank, then the error is now set
    * to 'Required'.
    * @param level - case statement index row
-   * @param condition - transformation result for the case statement condition 
+   * @param condition - transformation result for the case statement condition
    * @param output - transformation result for the case statement output
    * @param defaultCase - transformation result for the case statement default case
    */
@@ -695,7 +698,7 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
     } else {
       // Calling fhirpath.evaluate only on Case condition.
       if (this.outputExpressions) {
-        if (!processedExpression) { 
+        if (!processedExpression) {
           if (ref && ref?.control?.dirty) {
             return ExpressionEditorService.EXP_REQUIRED_ERR_MSG;
           }

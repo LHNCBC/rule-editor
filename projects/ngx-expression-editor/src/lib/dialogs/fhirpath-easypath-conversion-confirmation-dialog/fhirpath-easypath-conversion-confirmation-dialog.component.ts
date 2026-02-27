@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 import { SimpleStyle, DialogStyle, ExpressionEditorService } from '../../expression-editor.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -6,7 +6,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 @Component({
   selector: 'lhc-fhirpath-easypath-conversion-confirmation-dialog',
   templateUrl: './fhirpath-easypath-conversion-confirmation-dialog.component.html',
-  standalone: false
+  imports: [BaseDialogComponent]
 })
 export class FhirpathEasypathConversionConfirmationDialogComponent extends BaseDialogComponent {
 
@@ -26,10 +26,8 @@ export class FhirpathEasypathConversionConfirmationDialogComponent extends BaseD
       'text-align': 'left'
     }
   };
-  
-  constructor(protected liveAnnouncer: LiveAnnouncer) { 
-    super(liveAnnouncer);
-  }
+
+  protected liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Emits the 'confirmationYes' event

@@ -31,8 +31,8 @@ describe(Cypress.env("appName"), () => {
             cy.get('#variable-label-2').clear().type('c_fhirpath_exp');
             cy.get('#variable-type-2').select('FHIRPath Expression');
             cy.get('#variable-expression-2').clear().type("%resource.item.where(linkId='/8302-2').answer.value");
-          });   
-          
+          });
+
           // Add variable of variable type "FHIR Query"
           cy.get('#add-variable').click();
           cy.get('#variables-section .variable-row').should('have.length', 4);
@@ -77,7 +77,7 @@ describe(Cypress.env("appName"), () => {
             cy.get('#variable-label-6').clear().type('g_simple');
             cy.get('#variable-type-6').select('Easy Path Expression');
             cy.get('#simple-expression-6').type('1 + 1');
-          });      
+          });
 
           // Click Save
           cy.get('#export').click();
@@ -169,15 +169,15 @@ describe(Cypress.env("appName"), () => {
           // It should have language = application/x-fhir-query
           expect(parsedData.item[3].extension[3].valueExpression.name).to.equal('c');
           expect(parsedData.item[3].extension[3].valueExpression.language).to.equal('application/x-fhir-query');
-          expect(parsedData.item[3].extension[3].valueExpression.extension[0].valueString).to.equal('queryObservation');          
+          expect(parsedData.item[3].extension[3].valueExpression.extension[0].valueString).to.equal('queryObservation');
         });
       });
     });
 
     describe('BMI Variable Type', () => {
-      // This test illustrates that when the variable type (valueString) is not defined, 
+      // This test illustrates that when the variable type (valueString) is not defined,
       // the variable may not be converted to the correct data type for display.  Specifically,
-      // on the variables of type "FHIRPath Expression" and "FHIR Query (Observation)" in this 
+      // on the variables of type "FHIRPath Expression" and "FHIR Query (Observation)" in this
       // test.
       it('should be able to show that some variable types are not displayed correctly without the custom extension', () => {
 
@@ -268,8 +268,8 @@ describe(Cypress.env("appName"), () => {
           cy.get('div#row-6').within(() => {
             cy.get('#variable-label-6').should('have.value', 'fhirpath_exp');
             cy.get('#variable-type-6').should('have.value', 'expression');
-          });   
-          
+          });
+
           // Should display correct variable type - variable type "FHIRPath Expression"
           cy.get('div#row-7').within(() => {
             cy.get('#variable-label-7').should('have.value', 'fhirpath_exp2');
@@ -308,7 +308,7 @@ describe(Cypress.env("appName"), () => {
               cy.get('div.time-input>input').should('contain.value', '2');
               cy.get('div.time-select>select').should('contain.value', 'weeks');
             });
-          });          
+          });
 
           // Should display correct variable type - variable type "FHIR Query (Observation)"
           // Time unit should also display correctly.
@@ -452,20 +452,20 @@ describe(Cypress.env("appName"), () => {
 
           cy.title().should('eq', Cypress.env("appName"));
 
-          // The configuration said this should be type 'Question'.  However, the factor 
+          // The configuration said this should be type 'Question'.  However, the factor
           // 9999 does not matched with any pre-defined factors and therefore, is not a valid
           // question. The item is displayed as 'FHIRPath Expression' instead.
           cy.get('div#row-5').within(() => {
             cy.get('#variable-label-5').should('have.value', 'question_invalid_factor');
             cy.get('#variable-type-5').should('have.value', 'expression');
-            cy.get('#variable-expression-5').should('have.value', 
+            cy.get('#variable-expression-5').should('have.value',
               "%resource.item.where(linkId='/8302-2').answer.value*9999");
           });
 
           cy.get('div#row-24').within(() => {
             cy.get('#variable-label-24').should('have.value', 'not_question_type_expression');
             cy.get('#variable-type-24').should('have.value', 'expression');
-            cy.get('#variable-expression-24').should('have.value', 
+            cy.get('#variable-expression-24').should('have.value',
               "Observation.component.where(code.memberOf(%'vs-observation-vitalsignresult'))");
           });
 
@@ -478,7 +478,7 @@ describe(Cypress.env("appName"), () => {
           cy.get('div#row-26').within(() => {
             cy.get('#variable-label-26').should('have.value', 'not_question_type_expression_and_no_extension');
             cy.get('#variable-type-26').should('have.value', 'expression');
-            cy.get('#variable-expression-26').should('have.value', 
+            cy.get('#variable-expression-26').should('have.value',
               "Observation.component.where(code.memberOf(%'vs-observation-vitalsignresult'))");
           });
         });
@@ -561,10 +561,10 @@ describe(Cypress.env("appName"), () => {
           cy.get('#export').click();
 
           // Clicking the 'Save' button should yield 5 errors:
-          // question_weight_kg (row 0), 
+          // question_weight_kg (row 0),
           // fhir_query (row 8),
           // fhir_query_obs_1_day (row 10),
-          // question_empty_expression (row 23) and 
+          // question_empty_expression (row 23) and
           // question_empty_expression_and_no_extension (row 25)
           // should throw "Expression is required." b/c they are empty.
           cy.get('div#row-0').within(() => {
@@ -593,20 +593,20 @@ describe(Cypress.env("appName"), () => {
           // Fix the errors by entering data
           cy.get('#simple-expression-0').type('1');
           cy.get('lhc-query-observation').shadow().find('#autocomplete-8').type('weight');
-        });  
+        });
         cy.get('span#completionOptions').contains('29463-7').click();
-          
+
         cy.get('lhc-expression-editor').shadow().find('#question-10').clear().type('height');
 
         cy.get('span#completionOptions > ul > li').contains('8302-2').click();
-        
+
         cy.get('lhc-expression-editor').shadow().within(() => {
           cy.get('#variable-expression-19').clear().type("Observation.component.where(code.memberOf(%'vs-observation-vitalsignresult'))");
           cy.get('#question-23').clear().type('Clothing worn during measure');
         });
 
         cy.get('span#completionOptions > ul > li').contains('8352-7').click();
-        
+
         cy.get('lhc-expression-editor').shadow().within(() => {
           cy.get('#variable-expression-25').type('1');
 
@@ -619,7 +619,7 @@ describe(Cypress.env("appName"), () => {
           });
           cy.get('div#row-10').within(() => {
             cy.get('#question-10').should('not.have.class', 'field-error');
-          });        
+          });
           cy.get('div#row-19').within(() => {
             cy.get('#variable-expression-19').should('not.have.class', 'field-error');
           });
@@ -697,7 +697,7 @@ describe(Cypress.env("appName"), () => {
             cy.get('#question-22').should('have.value', "Custom Unit (/8306-6)" );
 
             // Unit should display as "Unit: sss"
-            cy.get('div.unit-select').should('have.text', 'Unit: sss');
+            cy.get('div.unit-select .detail').should('have.text', 'Unit: sss');
 
             // FHIRPath Expression should include factor if the unit is non-convertible.
             cy.get('lhc-syntax-preview pre').should('contain.text',

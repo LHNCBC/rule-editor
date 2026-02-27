@@ -1,17 +1,17 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren, QueryList, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
 import Def from 'autocomplete-lhc';
 import { HttpClient } from '@angular/common/http';
 
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
 
 @Component({
   selector: 'lhc-query-observation',
   templateUrl: './query-observation.component.html',
   styleUrls: ['../../../../../node_modules/autocomplete-lhc/source/auto_completion.css', './query-observation.component.css'],
+  imports: [FormsModule, ExpressionValidatorDirective],
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false
 })
 export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestroy {
   queryUrl = 'https://clinicaltables.nlm.nih.gov/api/loinc_items/v3/search?df=text,LOINC_NUM';
@@ -28,12 +28,13 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
   hasError = false;
 
   autoComplete;
-  codes: Array<string>;
+  codes: string[];
   timeInterval: number;
   timeIntervalUnit: string;
   expression: string;
 
-  constructor(private http: HttpClient, private expressionEditorService: ExpressionEditorService) {}
+  private http = inject(HttpClient);
+  private expressionEditorService = inject(ExpressionEditorService);
 
   /**
    * Angular lifecycle hook called when the component is initialized
@@ -52,7 +53,7 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
         this.timeInterval = this.variable.timeInterval || 1;
         this.timeIntervalUnit = this.variable.timeIntervalUnit || 'months';
         this.expression = this.variable.expression;
-      } else {       
+      } else {
         this.codes = [];
         this.timeInterval = 1;
         this.timeIntervalUnit = 'months';
@@ -159,9 +160,9 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
       this.codeRef.control.markAsTouched();
       this.codeRef.control.markAsDirty();
       this.codeRef.control.setValue((this.codes.length > 0) ? this.expression : "" );
-  
+
       const result = this.expressionValidator.validate(this.codeRef.control);
-    
+
       this.codeRef.control.setErrors(result);
     }
   }

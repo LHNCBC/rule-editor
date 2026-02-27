@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { Question, Variable } from '../variable';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
 import { Unit, UNIT_CONVERSION } from '../units';
 import Def from 'autocomplete-lhc';
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 
 import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
+import { SyntaxPreviewComponent } from '../syntax-preview/syntax-preview.component';
 
 @Component({
   selector: 'lhc-question',
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.css'],
-  standalone: false
+  imports: [ FormsModule, ExpressionValidatorDirective, SyntaxPreviewComponent ]
 })
 export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() variable: Variable;
@@ -21,7 +22,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('autoComplete') autoCompleteElement;
   @ViewChild('question') questionRef: NgModel;
   @ViewChild(ExpressionValidatorDirective) expressionValidator: ExpressionValidatorDirective;
-  
+
   performValidationSubscription;
 
   autoComplete;
@@ -34,7 +35,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   conversionOptions: Unit[];
   expression: string;
 
-  constructor(private variableService: ExpressionEditorService) {}
+  private variableService = inject(ExpressionEditorService);
 
   /**
    * Angular lifecycle hook called when the component is initialized
@@ -62,11 +63,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Get the Question Field Item
-   * @param itemText - Question Text  
-   * @param itemCode - Question Code 
+   * @param itemText - Question Text
+   * @param itemCode - Question Code
    */
   getQuestionFieldItem(itemText, itemCode): string {
-    return itemText + ' (' + itemCode + ')'; 
+    return itemText + ' (' + itemCode + ')';
   }
 
   /**
@@ -97,7 +98,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.linkId)
       question = this.getQuestion(this.linkId);
 
-    let opts = {
+    const opts = {
       tableFormat: false,
       codes: vals
     }
@@ -203,7 +204,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.questionRef.control.markAsTouched();
       this.questionRef.control.markAsDirty();
       this.questionRef.control.setValue((this.linkId) ? this.expression : "");
-  
+
       const result = this.expressionValidator.validate(this.questionRef.control);
       this.questionRef.control.setErrors(result);
     }

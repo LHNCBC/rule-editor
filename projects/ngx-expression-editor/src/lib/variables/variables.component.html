@@ -61,7 +61,7 @@
                 [class.field-error]="nameRef.errors"
                 #nameRef="ngModel"
                 lhcVariableNameValidator
-              [lhcVariableNameValidatorParams]="{'section': 'Item Variables',
+                [lhcVariableNameValidatorParams]="{'section': 'Item Variables',
                                                  'field': 'name',
                                                  'name': variable.label, 'index': i}"
                 />
@@ -137,9 +137,9 @@
                     #exp="ngModel"
                     lhcExpressionValidator
                     [lhcExpressionValidateInput]="'true'"
-              [lhcExpressionValidatorParams]="{'section': 'Item Variables',
-                                               'field': 'expression', 'type': 'fhirpath',
-                                               'id': 'variable-expression-' + i, 'index': i}"
+                    [lhcExpressionValidatorParams]="{'section': 'Item Variables',
+                                                   'field': 'expression', 'type': 'fhirpath',
+                                                   'id': 'variable-expression-' + i, 'index': i}"
                     />
                   @if (exp.errors) {
                     <div id="expression-error" role="alert" class="row error-span">
@@ -170,9 +170,9 @@
                     #exp="ngModel"
                     lhcExpressionValidator
                     [lhcExpressionValidateInput]="'true'"
-              [lhcExpressionValidatorParams]="{'section': 'Item Variables',
-                                               'field': 'expression', 'type': 'query',
-                                               'id': 'variable-expression-' + i, 'name': variableName, 'index': i}"
+                    [lhcExpressionValidatorParams]="{'section': 'Item Variables',
+                                                   'field': 'expression', 'type': 'query',
+                                                   'id': 'variable-expression-' + i, 'name': variableName, 'index': i}"
                     />
                   @if (exp.errors) {
                     <div id="expression-error" role="alert" class="row error-span">

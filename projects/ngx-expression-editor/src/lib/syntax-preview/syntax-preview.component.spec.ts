@@ -2,7 +2,6 @@ import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SyntaxPreviewComponent } from './syntax-preview.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('SyntaxPreviewComponent', () => {
   let component: SyntaxPreviewComponent;
@@ -10,8 +9,7 @@ describe('SyntaxPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SyntaxPreviewComponent ],
-      imports: [ MatSnackBarModule ]
+      imports: [SyntaxPreviewComponent]
     })
     .compileComponents();
   }));

@@ -6,8 +6,8 @@ import phq9 from '../../../../src/assets/phq9.json';
 import phq9_group from '../../../../src/assets/phq9_group.json';
 import phq9_preselected from '../../../../src/assets/phq9_preselected.json';
 
-// This file is not used in the demo. It is solely utilized for testing the 
-// getSelectedLinkIdsForScoring() function, specifically to validate the scenario where the 
+// This file is not used in the demo. It is solely utilized for testing the
+// getSelectedLinkIdsForScoring() function, specifically to validate the scenario where the
 // Total Scoring calculation item is located at the child item level.
 import phq9_preselected_child_total from '../../../../src/test/data/phq9_preselected_child_total.json';
 
@@ -24,7 +24,7 @@ const outputTotalScore = {
       'iif(%i.exists(), %i, 0), {})',
     extension: [{
       url: ExpressionEditorService.SCORE_EXPRESSION_EXTENSION_LINKIDS,
-      valueString: "[\"/44250-9\",\"/44255-8\",\"/44259-0\",\"/44254-1\",\"/44251-7\"," + 
+      valueString: "[\"/44250-9\",\"/44255-8\",\"/44259-0\",\"/44254-1\",\"/44251-7\"," +
         "\"/44258-2\",\"/44252-5\",\"/44253-3\",\"/44260-8\"]"
     }]
   }
@@ -47,9 +47,9 @@ const outputItem = {
 
 const outputItemWhereExpression = ".item.where(linkId = '/44254-1')";
 
-const outputItemExpression = "%questionnaire.item.where(linkId = \'/44254-1\').answerOption" +
-  ".where(valueCoding.code=%resource.item.where(linkId = \'/44254-1\').answer.valueCoding.code)" +
-  ".extension.where(url=\'http://hl7.org/fhir/StructureDefinition/ordinalValue\').valueDecimal"
+const outputItemExpression = "%questionnaire.item.where(linkId = '/44254-1').answerOption" +
+  ".where(valueCoding.code=%resource.item.where(linkId = '/44254-1').answer.valueCoding.code)" +
+  ".extension.where(url='http://hl7.org/fhir/StructureDefinition/ordinalValue').valueDecimal"
 
 
 const phq9_scoringItemLinkIds = [
@@ -64,9 +64,9 @@ const phq9_partialScoringItemLinkIds = [
 const outputGroupItemWhereExpression = ".item.where(linkId = '/45900-0').item.where(linkId = '/45900-0/44254-1')";
 
 const outputGroupItemExpression = "%questionnaire.item.where(linkId = '/45900-0').item" +
-  ".where(linkId = \'/45900-0/44254-1\').answerOption.where(valueCoding.code=%resource.item" + 
-  ".where(linkId = '/45900-0').item.where(linkId = \'/45900-0/44254-1\').answer.valueCoding.code)" +
-  ".extension.where(url=\'http://hl7.org/fhir/StructureDefinition/ordinalValue\').valueDecimal"
+  ".where(linkId = '/45900-0/44254-1').answerOption.where(valueCoding.code=%resource.item" +
+  ".where(linkId = '/45900-0').item.where(linkId = '/45900-0/44254-1').answer.valueCoding.code)" +
+  ".extension.where(url='http://hl7.org/fhir/StructureDefinition/ordinalValue').valueDecimal"
 
 const phq9_group_scoringItemLinkIds = [
   "/45900-0/44250-9", "/45900-0/44255-8", "/45900-0/44259-0", "/45900-0/44254-1", "/44251-7",
@@ -272,7 +272,7 @@ describe('ExpressionEditorService', () => {
 
     const secondItem = service.getScoreItems(phq9.item, "/44255-8")['scoreItems'];
     expect(secondItem.length).toEqual(1);
-    
+
     const totalItem = service.getScoreItems(phq9.item, "/39156-5")['scoreItems'];
     expect(totalItem.length).toEqual(9);
 
@@ -304,7 +304,7 @@ describe('ExpressionEditorService', () => {
     expect(Object.keys(parentScoringItem2[0])).not.toContain('hasScore');
     expect(Object.keys(parentScoringItem2[1])).toContain('hasScore');
     expect(Object.keys(parentScoringItem2[1])).not.toContain('item');
-    
+
     const parentNonScoringItem1 = service.getScoreItems(phq9_group.item, "/44253-5")['scoreItems'];
     // Have 3 sibling items before this.
     expect(parentNonScoringItem1.length).toEqual(3);
@@ -315,7 +315,7 @@ describe('ExpressionEditorService', () => {
     expect(Object.keys(parentOfChildItem6)).not.toContain('hasScore');
     expect(Object.keys(parentOfChildItem6)).toContain('item');
     expect(parentOfChildItem6.item.length).toEqual(1);
-    
+
     const parentScoringItem3 = service.getScoreItems(phq9_group.item, "/44252-5")['scoreItems'];
     expect(parentScoringItem3.length).toEqual(4);
     expect(Object.keys(parentScoringItem3[0])).not.toContain('hasScore');
@@ -325,7 +325,7 @@ describe('ExpressionEditorService', () => {
     expect(Object.keys(parentScoringItem3[2])).not.toContain('item');
     expect(Object.keys(parentScoringItem3[3])).not.toContain('hasScore');
     expect(Object.keys(parentScoringItem3[3])).toContain('item');
-    
+
     const childItem8 = service.getScoreItems(phq9_group.item, "/44252-5/44255-8")['scoreItems'];
     expect(childItem8.length).toEqual(5);
     const parentOfChildItem8 = childItem8[4];
@@ -443,7 +443,7 @@ describe('ExpressionEditorService', () => {
 
     const secondItem = service.hasCalculatedScoringItems(copy(phq9.item), "/44255-8");
     expect(secondItem).toBeTrue();
-    
+
     const totalItem = service.hasCalculatedScoringItems(copy(phq9.item), "/39156-5");
     expect(totalItem).toBeTrue();
   });
@@ -680,7 +680,7 @@ describe('ExpressionEditorService', () => {
       const output9 = service.isValidDoubleBracesSyntax("{{{{%a * 2}} - %b}}");
       expect(output9).toEqual(false);
       const output10 = service.isValidDoubleBracesSyntax("{{{{{{%a * 2}} - %b}} + %c}}");
-      expect(output10).toEqual(false);      
+      expect(output10).toEqual(false);
     });
   });
 
@@ -716,7 +716,7 @@ describe('ExpressionEditorService', () => {
       const output9 = service.encodeParamValue("{{{{%a * 2}} - %b}}");
       expect(output9).toEqual("{{{{%a * 2}} - %b}}");
       const output10 = service.encodeParamValue("{{{{{{%a * 2}} - %b}} + %c}}");
-      expect(output10).toEqual("{{{{{{%a * 2}} - %b}} + %c}}");     
+      expect(output10).toEqual("{{{{{{%a * 2}} - %b}} + %c}}");
     });
   });
 
@@ -745,28 +745,28 @@ describe('ExpressionEditorService', () => {
       const fhirqueryobs6 = service.decodeFHIRQueryObservationURIExpression(expressionObservationMissingValue);
       const fhirqueryobs7 = service.decodeFHIRQueryObservationURIExpression(expressionObservationWithNoParameters);
       const fhirqueryobs8 = service.decodeFHIRQueryObservationURIExpression(expressionObservationMissingKey);
-      
+
       expect(fhirqueryobs1).toBeNull();
       expect(fhirqueryobs2).toBeNull();
-      
+
       expect(fhirqueryobs3).not.toBeNull();
       const output3Keys = Object.keys(fhirqueryobs3);
-      for (let i = 0; i < ExpressionEditorService.FHIR_QUERY_OBS_FIELDS.length; i++) {
-        expect(output3Keys).toContain(ExpressionEditorService.FHIR_QUERY_OBS_FIELDS[i]);
+      for (const field of ExpressionEditorService.FHIR_QUERY_OBS_FIELDS) {
+        expect(output3Keys).toContain(field);
       }
       expect(fhirqueryobs3['date']).toEqual("gt{{today()-2 days}}");
 
       expect(fhirqueryobs4).not.toBeNull();
       const output4Keys = Object.keys(fhirqueryobs4);
-      for (let i = 0; i < ExpressionEditorService.FHIR_QUERY_OBS_FIELDS.length; i++) {
-        expect(output4Keys).toContain(ExpressionEditorService.FHIR_QUERY_OBS_FIELDS[i]);
+      for (const field of ExpressionEditorService.FHIR_QUERY_OBS_FIELDS) {
+        expect(output4Keys).toContain(field);
       }
       expect(fhirqueryobs4['date']).toEqual("gt{{today()-4 weeks}}");
 
       expect(fhirqueryobs5).not.toBeNull();
       const output5Keys = Object.keys(fhirqueryobs5);
-      for (let i = 0; i < ExpressionEditorService.FHIR_QUERY_OBS_FIELDS.length; i++) {
-        expect(output5Keys).toContain(ExpressionEditorService.FHIR_QUERY_OBS_FIELDS[i]);
+      for (const field of ExpressionEditorService.FHIR_QUERY_OBS_FIELDS) {
+        expect(output5Keys).toContain(field);
       }
       expect(fhirqueryobs5['date']).toEqual("gt{{today()-6 months}}");
 
@@ -783,7 +783,7 @@ describe('ExpressionEditorService', () => {
       const expressionObservationResourceShort = "Observation?code=loinc|1234-1";
       const expressionObservationResource =
         "Observation?code=test%2Chttp://loinc.org|65972-2&date=gt{{today()-2 days}}&patient={{%patient.id}}&_sort=-date&_count=1";
-      const expressionObservationResourceParamsDiffOrders = 
+      const expressionObservationResourceParamsDiffOrders =
         "Observation?_sort=-date&_count=1&code=test%2Chttp://loinc.org|65972-2&date=gt{{today()-4 weeks}}&patient={{%patient.id}}";
       const expressionObservationResourceParamsDiffOrders2 =
         "Observation?patient={{%patient.id}}&_sort=-date&_count=1&code=test%2Chttp://loinc.org|65972-2&date=gt{{today()-6 months}}";
@@ -793,7 +793,7 @@ describe('ExpressionEditorService', () => {
       const matchArr3 = service.getFHIRQueryObservationMatches(expressionObservationResource);
       const matchArr4 = service.getFHIRQueryObservationMatches(expressionObservationResourceParamsDiffOrders);
       const matchArr5 = service.getFHIRQueryObservationMatches(expressionObservationResourceParamsDiffOrders2);
-      
+
       expect(matchArr1.length).toEqual(0);
       expect(matchArr2.length).toEqual(0);
       expect(matchArr3.length).toEqual(4);

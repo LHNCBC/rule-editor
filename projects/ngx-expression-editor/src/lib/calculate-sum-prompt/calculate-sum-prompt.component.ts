@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { BaseDialogComponent } from '../dialogs/base-dialog/base-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lhc-calculate-sum-prompt',
   templateUrl: './calculate-sum-prompt.component.html',
   styleUrls: ['../expression-editor.component.css', './calculate-sum-prompt.component.css'],
-  standalone: false
+  imports: [MatTooltipModule, BaseDialogComponent]
 })
-export class CalculateSumPromptComponent implements OnInit {
+export class CalculateSumPromptComponent {
   @Input() lhcStyle: SimpleStyle = {};
   @Output() selectItems: EventEmitter<any> = new EventEmitter<any>();
   @Output() no: EventEmitter<any> = new EventEmitter<any>();
@@ -19,9 +21,8 @@ export class CalculateSumPromptComponent implements OnInit {
   selectItemsAriaDescription="Click the 'Yes' button to select items for the scoring calculation.";
   skipSelectItemsAriaDescription=`Click the 'No' button to skip item selection and go to the ${this.appName}.`;
 
-  constructor(private expressionEditorService: ExpressionEditorService, private liveAnnouncer: LiveAnnouncer) { }
-
-  ngOnInit(): void {}
+  private expressionEditorService = inject(ExpressionEditorService);
+  private liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Close the dialog by specifying this should not calculate the score
@@ -52,7 +53,7 @@ export class CalculateSumPromptComponent implements OnInit {
    */
   onSelectItemsClick(): void {
     this.expressionEditorService.dialogStack.pop();
-  
+
     this.selectItems.emit();
   }
 }

@@ -1657,7 +1657,7 @@ describe(Cypress.env("appName"), () => {
                 cy.get('@checkboxes').eq(4).uncheck();
 
                 // Validate that none were selected
-                cy.get('@checkboxes').each(($checkbox, index) => {
+                cy.get('@checkboxes').each(($checkbox) => {
                   cy.wrap($checkbox).should('not.be.checked');
                 });
               });
@@ -2096,7 +2096,7 @@ describe(Cypress.env("appName"), () => {
               .within(() => {
                 cy.get('div.items-tree tree-node').should('have.length', 26);
                 cy.get('.angular-tree-component  [type="checkbox"]').as('checkboxes');
-                cy.get('@checkboxes').each(($checkbox, index) => {
+                cy.get('@checkboxes').each(($checkbox) => {
                   cy.wrap($checkbox).should('not.be.checked');
                 });
               });
@@ -2125,7 +2125,7 @@ describe(Cypress.env("appName"), () => {
                 cy.get('div.items-tree tree-node').should('have.length', 26);
                 cy.get('.angular-tree-component  [type="checkbox"]').as('checkboxes');
 
-                cy.get('@checkboxes').each(($checkbox, index) => {
+                cy.get('@checkboxes').each(($checkbox) => {
                     cy.wrap($checkbox).should('be.checked');
                 });
               });
@@ -2142,7 +2142,7 @@ describe(Cypress.env("appName"), () => {
                 cy.get('div.items-tree tree-node').should('have.length', 26);
                 cy.get('.angular-tree-component  [type="checkbox"]').as('checkboxes');
 
-                cy.get('@checkboxes').each(($checkbox, index) => {
+                cy.get('@checkboxes').each(($checkbox) => {
                   cy.wrap($checkbox).should('not.be.checked');
                 });
               });

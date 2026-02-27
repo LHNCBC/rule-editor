@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Input, Output, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output, ViewChild, ElementRef, HostListener, inject } from '@angular/core';
 import { DialogStyle, DialogTypes, SimpleStyle } from '../../expression-editor.service';
 import copy from 'fast-copy';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
 import { ExpressionEditorService } from '../../expression-editor.service';
+import { CommonModule } from '@angular/common';
 
 const confirmationDialogStyle = {
   dialogContentDiv: {
@@ -89,21 +90,21 @@ const expressionEditorDialogStyle = {
   selector: 'lhc-base-dialog',
   templateUrl: './base-dialog.component.html',
   styleUrls: ['./base-dialog.component.css'],
-  standalone: false
+  imports: [A11yModule, CommonModule]
 })
 export class BaseDialogComponent implements OnInit {
   @Input() customDialogStyle: DialogStyle = {};
   @Input() lhcStyle: SimpleStyle = {};
   @Input() dialogType: DialogTypes;
-  @Input() displayTitleBar: boolean = true;
-  @Input() titleBarLabel: string = '';
-  @Input() headerLabel: string = '';
-  @Input() yesButtonLabel: string = 'Yes';
-  @Input() noButtonLabel: string = 'No';
-  @Input() yesButtonId: string = 'yes-button';
-  @Input() noButtonId: string = 'no-button';
-  @Input() enableOverlayClick: boolean = true;
-  @Input() name: string = '';
+  @Input() displayTitleBar = true;
+  @Input() titleBarLabel = '';
+  @Input() headerLabel = '';
+  @Input() yesButtonLabel = 'Yes';
+  @Input() noButtonLabel = 'No';
+  @Input() yesButtonId = 'yes-button';
+  @Input() noButtonId = 'no-button';
+  @Input() enableOverlayClick = true;
+  @Input() name = '';
 
   @Output() yes: EventEmitter<any> = new EventEmitter<any>();
   @Output() no: EventEmitter<any> = new EventEmitter<any>();
@@ -126,7 +127,8 @@ export class BaseDialogComponent implements OnInit {
   dialogName = "";
   isHovered = false;
 
-  constructor(protected liveAnnouncer: LiveAnnouncer, protected expressionEditorService?: ExpressionEditorService ) {};
+  protected liveAnnouncer = inject(LiveAnnouncer);
+  protected expressionEditorService = inject(ExpressionEditorService);
 
   /**
    * Angular lifecycle hook called when the component is initialized

@@ -2,14 +2,6 @@ import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ExpressionEditorComponent } from './expression-editor.component';
-import { UneditableVariablesComponent } from './uneditable-variables/uneditable-variables.component';
-import { VariablesComponent } from './variables/variables.component';
-import { FormsModule } from '@angular/forms';
-import { CaseStatementsComponent } from './case-statements/case-statements.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SyntaxPreviewComponent } from './syntax-preview/syntax-preview.component';
-import { BaseDialogComponent } from './dialogs/base-dialog/base-dialog.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ValidationResult } from './variable';
 import { ENVIRONMENT_TOKEN } from './environment-token';
 
@@ -24,15 +16,7 @@ describe('ExpressionEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ExpressionEditorComponent,
-        UneditableVariablesComponent,
-        VariablesComponent,
-        CaseStatementsComponent,
-        SyntaxPreviewComponent,
-        BaseDialogComponent
-      ],
-      imports: [ FormsModule, MatSnackBarModule, MatTooltipModule ],
+      imports: [ExpressionEditorComponent],
       providers: [
         { provide: ENVIRONMENT_TOKEN, useValue: env }
       ],

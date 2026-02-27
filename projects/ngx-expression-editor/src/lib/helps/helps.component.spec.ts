@@ -2,7 +2,6 @@ import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HelpsComponent } from './helps.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('HelpsComponent', () => {
   let component: HelpsComponent;
@@ -10,8 +9,8 @@ describe('HelpsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ HelpsComponent ],
-      imports: [ MatTooltipModule ]
+      declarations: [],
+      imports: [HelpsComponent]
     })
     .compileComponents();
 
@@ -22,5 +21,5 @@ describe('HelpsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  }); 
+  });
 });

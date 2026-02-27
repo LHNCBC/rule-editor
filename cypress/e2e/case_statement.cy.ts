@@ -5,10 +5,6 @@ describe(Cypress.env("appName"), () => {
 
   describe('Angular Library', () => {
     describe('BMI calculation', () => {
-      beforeEach(() => {
-
-      });
-
       it('should cycle through empty case statment correctly from Easy Path Expression to FHIRPath Expression and back', () => {
         cy.get('select#questionnaire-select').select('BMI Calculation (Easy Path expression)');
 

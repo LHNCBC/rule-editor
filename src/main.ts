@@ -1,13 +1,18 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { A11yModule } from '@angular/cdk/a11y';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { ExpressionEditorModule, ENVIRONMENT_TOKEN } from 'projects/ngx-expression-editor/src/public-api';
 import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
-type Env = {
+interface Env {
   production: boolean,
   appName: string,
   appTitle: string
@@ -21,5 +26,11 @@ declare global {
 
 window.env = environment;
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    { provide: ENVIRONMENT_TOKEN, useValue: environment },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideRouter([]),
+    importProvidersFrom(ExpressionEditorModule, A11yModule, MatTooltipModule)
+  ]
+}).catch(err => console.error(err));

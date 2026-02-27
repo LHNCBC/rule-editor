@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 import { SimpleStyle } from '../../expression-editor.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -6,7 +6,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 @Component({
   selector: 'lhc-cancel-changes-confirmation-dialog',
   templateUrl: './cancel-changes-confirmation-dialog.component.html',
-  standalone: false
+  imports: [BaseDialogComponent]
 })
 export class CancelChangesConfirmationDialogComponent extends BaseDialogComponent {
   @Input() lhcStyle: SimpleStyle = {};
@@ -14,9 +14,7 @@ export class CancelChangesConfirmationDialogComponent extends BaseDialogComponen
   @Output() confirmationNo: EventEmitter<any> = new EventEmitter<any>();
   @Output() dialogClose: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(protected liveAnnouncer: LiveAnnouncer) { 
-    super(liveAnnouncer);
-  }
+  protected liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Emits the 'confirmationYes' event

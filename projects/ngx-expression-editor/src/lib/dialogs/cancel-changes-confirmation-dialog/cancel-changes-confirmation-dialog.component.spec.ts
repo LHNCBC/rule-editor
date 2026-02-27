@@ -2,7 +2,6 @@ import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CancelChangesConfirmationDialogComponent } from './cancel-changes-confirmation-dialog.component';
-import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 
 describe('CancelChangesConfirmationDialogComponent', () => {
   let component: CancelChangesConfirmationDialogComponent;
@@ -10,10 +9,7 @@ describe('CancelChangesConfirmationDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        CancelChangesConfirmationDialogComponent,
-        BaseDialogComponent
-      ]
+      imports: [ CancelChangesConfirmationDialogComponent ]
     })
     .compileComponents();
 
