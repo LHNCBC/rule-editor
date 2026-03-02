@@ -461,9 +461,9 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
    */
   toggleUsableFunctionItem(item) {
     if (this.currentActiveOpenedItem !== '' && this.currentActiveOpenedItem !== item) {
-      if (this.usableFunctions2?.[this.currentActiveOpenedItem] != null)
+      if (Object.prototype.hasOwnProperty.call(this.usableFunctions2, this.currentActiveOpenedItem))
         this.usableFunctions2[this.currentActiveOpenedItem].display = false;
-      else if (this.usableOperators2?.[this.currentActiveOpenedItem] != null)
+      else if (Object.prototype.hasOwnProperty.call(this.usableOperators2, this.currentActiveOpenedItem))
         this.usableOperators2[this.currentActiveOpenedItem].display = false;
     }
 

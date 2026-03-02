@@ -37,7 +37,6 @@ export class CaseStatementsComponent implements OnInit, OnChanges, OnDestroy, Af
   outputExpressions = true;
   defaultCase: string;
   simpleDefaultCase: string;
-  //cases: Array<CaseStatement> = [{ condition: '', simpleCondition: '', output: '', simpleOutput: '' }];
   cases: CaseStatement[] = [{ condition: '', simpleCondition: '', output: '', simpleOutput: '' }];
 
   output = '';
