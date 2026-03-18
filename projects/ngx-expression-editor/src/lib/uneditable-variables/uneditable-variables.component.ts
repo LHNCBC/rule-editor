@@ -5,8 +5,7 @@ import { UneditableVariable } from '../variable';
 @Component({
   selector: 'lhc-uneditable-variables',
   templateUrl: './uneditable-variables.component.html',
-  styleUrls: ['./uneditable-variables.component.css', '../styles/section.css'],
-  standalone: false
+  styleUrls: ['./uneditable-variables.component.css', '../styles/section.css']
 })
 export class UneditableVariablesComponent implements OnInit, OnDestroy {
   @Input() lhcStyle: SimpleStyle = {};

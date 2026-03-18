@@ -1,14 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DialogStyle, ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
-import {ITreeOptions, KEYS, TREE_ACTIONS, TreeComponent, TreeNode} from '@bugsplat/angular-tree-component';
+import {ITreeOptions, KEYS, TREE_ACTIONS, TreeComponent, TreeModule, TreeNode} from '@bugsplat/angular-tree-component';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { BaseDialogComponent } from '../dialogs/base-dialog/base-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lhc-select-scoring-items',
   templateUrl: './select-scoring-items.component.html',
   styleUrls: ['../../../../../node_modules/@bugsplat/angular-tree-component/css/angular-tree-component.css', '../expression-editor.component.css', './select-scoring-items.component.css'],
-  encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false
+  imports: [ CommonModule, TreeModule, MatTooltipModule, BaseDialogComponent],
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class SelectScoringItemsComponent implements OnInit {
   @Input() lhcStyle: SimpleStyle = {};
@@ -92,7 +95,8 @@ export class SelectScoringItemsComponent implements OnInit {
   doneSelectionAriaDescription="Click the 'Done' button to complete the scoring item selection.";
   reviewFHIRPathAriaDesription=`Click the 'Review FHIRPath' button to review the scoring item selection in the ${this.appName}.`;
 
-  constructor(private expressionEditorService: ExpressionEditorService, private liveAnnouncer: LiveAnnouncer) { }
+  private expressionEditorService = inject(ExpressionEditorService);
+  private liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Angular lifecycle hook called when the component is initialized

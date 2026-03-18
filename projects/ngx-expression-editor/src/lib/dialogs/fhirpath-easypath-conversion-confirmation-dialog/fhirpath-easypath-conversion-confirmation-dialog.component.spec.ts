@@ -2,7 +2,6 @@ import 'zone.js/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FhirpathEasypathConversionConfirmationDialogComponent } from './fhirpath-easypath-conversion-confirmation-dialog.component';
-import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 
 describe('FhirpathEasypathConversionConfirmationDialogComponent', () => {
   let component: FhirpathEasypathConversionConfirmationDialogComponent;
@@ -10,10 +9,7 @@ describe('FhirpathEasypathConversionConfirmationDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        FhirpathEasypathConversionConfirmationDialogComponent,
-        BaseDialogComponent
-      ]
+      imports: [FhirpathEasypathConversionConfirmationDialogComponent]
     })
     .compileComponents();
 

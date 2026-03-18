@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { ExpressionEditorModule, ENVIRONMENT_TOKEN } from 'ngx-expression-editor';
+import { ExpressionEditorModule, ENVIRONMENT_TOKEN } from 'projects/ngx-expression-editor/src/public-api';
 
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
@@ -12,13 +12,12 @@ import { environment } from '../environments/environment';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [],
   bootstrap: [
     AppComponent
   ],
   imports: [
+    AppComponent,
     BrowserModule,
     FormsModule,
     ExpressionEditorModule,

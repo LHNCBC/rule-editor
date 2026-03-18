@@ -1,14 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, OnDestroy, ViewChild, inject } from '@angular/core';
 import { EasyPathExpressionsPipe } from '../easy-path-expressions.pipe';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
-import { SectionTypes } from '../variable';
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
+import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
+import { SyntaxPreviewComponent } from '../syntax-preview/syntax-preview.component';
 
 @Component({
   selector: 'lhc-syntax-converter',
   templateUrl: './syntax-converter.component.html',
   styleUrls: ['../expression-editor.component.css', './syntax-converter.component.css'],
-  standalone: false
+  imports: [FormsModule, ExpressionValidatorDirective, SyntaxPreviewComponent]
 })
 export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
   @Input() simple: string;
@@ -22,7 +23,7 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output() simpleChange = new EventEmitter<string>();
   @Output() expressionChange = new EventEmitter<string>();
- 
+
   @ViewChild('inputRef') inputRef!: NgModel;
 
   performValidationSubscription;
@@ -31,7 +32,7 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
 
   hasError = false;
 
-  constructor(private expressionEditorService: ExpressionEditorService) {}
+  private expressionEditorService = inject(ExpressionEditorService);
 
   /**
    * Angular lifecycle hook called when the component is initialized
@@ -39,7 +40,7 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     // performValidationSubscription is triggered when the 'Save' button is clicked, allowing each
     // subscribed component to validate the expression data.
-    this.performValidationSubscription = this.expressionEditorService.performValidationChange.subscribe((validation) => {  
+    this.performValidationSubscription = this.expressionEditorService.performValidationChange.subscribe((validation) => {
       if (this.inputRef) {
         this.inputRef.control.markAsTouched();
         this.inputRef.control.markAsDirty();
@@ -64,7 +65,7 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
     // This function is getting called repeatedly even if there is no changes. Adding the if block
     // to discard some of the events.
     // The changes.simple fires when there is a change to the Easy Path Expression expression.
-    // The changes.variables fires when a variable is deleted. 
+    // The changes.variables fires when a variable is deleted.
     if (changes.simple || (changes.variables &&
         JSON.stringify(changes.variables.previousValue) !== JSON.stringify(changes.variables.currentValue))) {
       this.onExpressionChange(this.simple);
@@ -82,9 +83,9 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Performs conversion from Easy Path Expression to FHIRPath Expression when there is a change 
+   * Performs conversion from Easy Path Expression to FHIRPath Expression when there is a change
    * on tge expression.
-   * @param simple 
+   * @param simple
    */
   onExpressionChange(simple): void {
     const fhirPath: string = (simple) ? this.jsToFhirPathPipe.transform(simple, this.variables) : "";
@@ -95,9 +96,6 @@ export class SyntaxConverterComponent implements OnInit, OnChanges, OnDestroy {
 
     this.simpleChange.emit(simple);
     this.expressionChange.emit(fhirPath);
-
-    const section = (this.variableName) ? SectionTypes.ItemVariables : SectionTypes.OutputExpression;
-    const errorFieldName = (this.variableName) ? this.variableName : "output expression";
 
   }
 }

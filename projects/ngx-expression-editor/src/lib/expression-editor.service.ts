@@ -1207,7 +1207,7 @@ export class ExpressionEditorService {
   composeScoringItemsExpressions(items, linkId: string): string[] {
     // Retrieve itmes where expressions
     const itemExpressions = this.composeItemsWhereConditionExpressions(items, linkId);
-    const scoreExpressions = itemExpressions.map((e, i) => {
+    const scoreExpressions = itemExpressions.map((e) => {
       return `%questionnaire${e.itemQuery}.answerOption` +
         `.where(valueCoding.code=%resource${e.answerOptionQuery}.answer.valueCoding.code).extension` +
         `.where(url='http://hl7.org/fhir/StructureDefinition/ordinalValue').valueDecimal`;

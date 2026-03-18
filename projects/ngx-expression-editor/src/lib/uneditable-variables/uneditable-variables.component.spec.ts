@@ -9,7 +9,7 @@ describe('UneditableVariablesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UneditableVariablesComponent ]
+      imports: [ UneditableVariablesComponent ]
     })
     .compileComponents();
   }));

@@ -1,28 +1,43 @@
-import { Directive, Input } from '@angular/core';
-import { AbstractControl, Validator, NG_VALIDATORS } from '@angular/forms';
+
+import { Directive, Input, inject } from '@angular/core';
+import {
+  AbstractControl,
+  Validator,
+  ValidationErrors,
+  NG_VALIDATORS
+} from '@angular/forms';
+
 import { ExpressionEditorService } from '../../lib/expression-editor.service';
 import { variableNameValidator } from '../../validators/variableNameValidator';
 import { ValidationParam } from '../../lib/variable';
 
 @Directive({
   selector: '[lhcVariableNameValidator]',
-  providers: [{
-    provide: NG_VALIDATORS,
-    useExisting: VariableNameValidatorDirective,
-    multi: true
-  }],
-  standalone: false
+  providers: [
+    {
+      provide: NG_VALIDATORS,
+      useExisting: VariableNameValidatorDirective,
+      multi: true
+    }
+  ]
 })
 export class VariableNameValidatorDirective implements Validator {
-  @Input('lhcVariableNameValidatorParams') param: ValidationParam;
 
-  constructor(private expressionEditorService: ExpressionEditorService) {}
+  @Input() lhcVariableNameValidatorParams!: ValidationParam;
 
-  validate(control: AbstractControl) : {[key: string]: any} | null {
-    const result = variableNameValidator(this.expressionEditorService, this.param)(control);
+  private expressionEditorService = inject(ExpressionEditorService);
 
-    this.expressionEditorService.notifyValidationResult(this.param, result);
+  validate(control: AbstractControl): ValidationErrors | null {
+    const result = variableNameValidator(
+      this.expressionEditorService,
+      this.lhcVariableNameValidatorParams
+    )(control);
+
+    this.expressionEditorService.notifyValidationResult(
+      this.lhcVariableNameValidatorParams,
+      result
+    );
+
     return result;
   }
-
 }

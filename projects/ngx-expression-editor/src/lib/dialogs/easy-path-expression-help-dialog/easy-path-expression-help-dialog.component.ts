@@ -1,19 +1,18 @@
-//import { Component } from '@angular/core';
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
-import { SimpleStyle, DialogStyle } from '../../expression-editor.service';
+import { SimpleStyle } from '../../expression-editor.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'lhc-easy-path-expression-help-dialog',
   templateUrl: './easy-path-expression-help-dialog.component.html',
   styleUrls: ['./easy-path-expression-help-dialog.component.css'],
-  standalone: false
+  imports: [BaseDialogComponent]
 })
 export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
   @Input() lhcStyle: SimpleStyle = {};
   @Output() onCloseHelp: EventEmitter<any> = new EventEmitter<any>();
-  
+
   arrow_arr = ["arrow right", "arrow down"];
   help_arrow_ops = this.arrow_arr[0];
   help_arrow_funcs = this.arrow_arr[0];
@@ -55,7 +54,7 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
     "^" : {
       "description" : "The Power operator denoted by a carat symbol.  It returns the result of raising the first operand to the power of the second operand.",
       "usage" : "operand1^operand2",
-      "usageScreenReader" : "operand1 carat operand2", 
+      "usageScreenReader" : "operand1 carat operand2",
       "example" : ["2^3 returns 8"],
       "exampleScreenReader" : ["2 carat 3 returns 8"],
       "output": "integer or decimal",
@@ -117,7 +116,7 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
       "usage" : "operand1 = operand2",
       "example" : [
         "2 = 3 returns false",
-        "3 = 3 returns true" 
+        "3 = 3 returns true"
       ],
       "output" : "boolean",
       "display" : false
@@ -236,7 +235,7 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
     "LOG()" : {
       "description" : "The LOG function returns the logarithm of a number.  This function accepts two input parameters: base and value.",
       "usage" : "LOG([Base],[Value])",
-      "usageScreenReader" : "LOG open parenthesis [Base] comma [Value] close parenthesis", 
+      "usageScreenReader" : "LOG open parenthesis [Base] comma [Value] close parenthesis",
       "example" : [
                     "LOG(2, 10) returns 4.0"
                   ],
@@ -346,10 +345,8 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
   functionItemsReadOnly = true;
 
   currentActiveOpenedItem = '';
-  
-  constructor(protected liveAnnouncer: LiveAnnouncer) { 
-    super(liveAnnouncer);
-  }
+
+  protected liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Emits the 'onCloseHelp' event
@@ -373,12 +370,12 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
     this.help_arrow_ops = this.arrow_arr[usableOperatorsFlag?1:0];
     this.help_arrow_funcs = this.arrow_arr[usableFunctionsFlag?1:0];
   }
- 
+
   /**
-   * Invoke the live announcer 
+   * Invoke the live announcer
    */
   getLiveAnncounementForSection() {
-    let announceText = 'Use the ENTER key to enter this section.';
+    const announceText = 'Use the ENTER key to enter this section.';
 
     this.liveAnnouncer.announce(announceText);
   }
@@ -394,18 +391,18 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
   }
 
   /**
-   * Toggle to display detail information for each of the operators and invoke the live announcer 
+   * Toggle to display detail information for each of the operators and invoke the live announcer
    * @param item - Selected usable operator item
    */
   toggleUsableOperatorItem(item) {
     if (this.currentActiveOpenedItem !== '' && this.currentActiveOpenedItem !== item) {
-      if (this.usableOperators2.hasOwnProperty(this.currentActiveOpenedItem))
+      if (Object.prototype.hasOwnProperty.call(this.usableOperators2, this.currentActiveOpenedItem))
         this.usableOperators2[this.currentActiveOpenedItem].display = false;
-      else if (this.usableFunctions2.hasOwnProperty(this.currentActiveOpenedItem))
+      else if (Object.prototype.hasOwnProperty.call(this.usableFunctions2, this.currentActiveOpenedItem))
         this.usableFunctions2[this.currentActiveOpenedItem].display = false;
     }
     this.usableOperators2[item].display = !this.usableOperators2[item].display;
-    
+
     if (this.usableOperators2[item].display) {
       this.currentActiveOpenedItem = item;
       this.getLiveAnnouncementDetailForItem(this.usableOperators2[item]);
@@ -418,7 +415,7 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
    * @param item - Selected usable operator  or function item
    */
   getLiveAnnouncementForItem(item) {
-    let announceText = item.description + "  Click the Enter key to get more detail.";
+    const announceText = item.description + "  Click the Enter key to get more detail.";
 
     this.liveAnnouncer.announce(announceText);
   }
@@ -430,11 +427,15 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
     let announceText = '';
 
     announceText += item.description + " ";
-    let usage = (item.hasOwnProperty('usageScreenReader')) ? item.usageScreenReader : item.usage;
+    const usage = Object.prototype.hasOwnProperty.call(item, 'usageScreenReader')
+      ? item.usageScreenReader
+      : item.usage;
     announceText += "The usage is " + usage + ".   ";
     announceText += "The expected output is " + item.output + ".  ";
 
-    let ex = (item.hasOwnProperty('exampleScreenReader')) ? item.exampleScreenReader : item.example;
+    const ex = Object.prototype.hasOwnProperty.call(item, 'exampleScreenReader')
+      ? item.exampleScreenReader
+      : item.usage;
 
     for (let i = 0; i < ex.length; i++) {
       announceText += "Example " + (i + 1) + ".  "  + ex[i] + ". ";
@@ -455,14 +456,14 @@ export class EasyPathExpressionHelpDialogComponent extends BaseDialogComponent {
   }
 
   /**
-   * Toggle to display detail information for each of the functions and invoke the live announcer 
+   * Toggle to display detail information for each of the functions and invoke the live announcer
    * @param item - Selected usable function item
-  */
+   */
   toggleUsableFunctionItem(item) {
     if (this.currentActiveOpenedItem !== '' && this.currentActiveOpenedItem !== item) {
-      if (this.usableFunctions2.hasOwnProperty(this.currentActiveOpenedItem))
+      if (Object.prototype.hasOwnProperty.call(this.usableFunctions2, this.currentActiveOpenedItem))
         this.usableFunctions2[this.currentActiveOpenedItem].display = false;
-      else if (this.usableOperators2.hasOwnProperty(this.currentActiveOpenedItem))
+      else if (Object.prototype.hasOwnProperty.call(this.usableOperators2, this.currentActiveOpenedItem))
         this.usableOperators2[this.currentActiveOpenedItem].display = false;
     }
 

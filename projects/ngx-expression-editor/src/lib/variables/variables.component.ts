@@ -1,15 +1,28 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChildren, QueryList, inject } from '@angular/core';
 import { Variable, AllVariableType, SimpleVariableType } from '../variable';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ExpressionEditorService, SimpleStyle } from '../expression-editor.service';
 import copy from 'fast-copy';
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
+import { HelpsComponent } from '../helps/helps.component';
+import { CommonModule } from '@angular/common';
+import { QuestionComponent } from '../question/question.component';
+import { FhirpathEasypathConversionConfirmationDialogComponent } from '../dialogs/fhirpath-easypath-conversion-confirmation-dialog/fhirpath-easypath-conversion-confirmation-dialog.component';
+import { QueryObservationComponent } from '../query-observation/query-observation.component';
+import { SyntaxConverterComponent } from '../syntax-converter/syntax-converter.component';
+import { VariableNameValidatorDirective } from '../../directives/variable-name/variable-name-validator.directive';
+import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lhc-variables',
   templateUrl: './variables.component.html',
   styleUrls: ['./variables.component.css', '../styles/section.css'],
-  standalone: false
+  imports: [CommonModule, DragDropModule, ExpressionValidatorDirective,
+             FormsModule, FhirpathEasypathConversionConfirmationDialogComponent,
+             HelpsComponent, MatTooltipModule, QueryObservationComponent,
+             QuestionComponent, SyntaxConverterComponent,
+             VariableNameValidatorDirective]
 })
 export class VariablesComponent implements OnInit, OnChanges, OnDestroy {
   @Input() lhcStyle: SimpleStyle = {};
@@ -110,7 +123,7 @@ export class VariablesComponent implements OnInit, OnChanges, OnDestroy {
         // Make a copy of the existing variables
         const previousVariables = JSON.parse(JSON.stringify(this.variables));
 
-        this.variables.forEach((variable, index) => {
+        this.variables.forEach((variable) => {
           variable.type = '';
         });
 

@@ -2,15 +2,14 @@
   <div class="query-select">
     <input [style]="lhcStyle.input" placeholder="LOINC Name / LOINC Number / Other Code"
       class="query-autocomplete" #autoComplete id="autocomplete-{{index}}"
-
       [class.field-error]="qobs.errors"
       (ngModel)="codes"
       #qobs="ngModel"
       lhcExpressionValidator
       [lhcExpressionValidateInput]="'true'"
-           [lhcExpressionValidatorParams]="{'section': 'Item Variables',
-                                            'field': 'expression', 'type': 'queryObservation',
-                                            'codes': codes, 'index': index}"
+      [lhcExpressionValidatorParams]="{'section': 'Item Variables',
+                                      'field': 'expression', 'type': 'queryObservation',
+                                      'codes': codes, 'index': index}"
 
       />
   </div>

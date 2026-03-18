@@ -4,8 +4,8 @@ import { ReservedWords, StartsWithReservedWords } from '../lib/reserved-variable
 import * as constants from "../lib/validation";
 
 export function variableNameValidator(expressionEditorService: ExpressionEditorService, param: any): ValidatorFn {
-  
-  return (control:AbstractControl) : {[key: string]: any} | null => {
+
+  return (control:AbstractControl) : Record<string, any> | null => {
     if (control.pristine)
       return null;
 
@@ -23,26 +23,26 @@ export function variableNameValidator(expressionEditorService: ExpressionEditorS
     const reservedWordsPattern = new RegExp(ReservedWords.join("|"), "i");
 
     if (!control.value) {
-      return { 
+      return {
         'variableNameRequiredError': true,
         'message': constants.VARIABLE_NAME_REQUIRED,
         'ariaMessage': constants.VARIABLE_NAME_REQUIRED
       };
     } else if (contextVariableNames.includes(control.value)) {
-      return { 
+      return {
         'duplicateVariableNameError': true,
         'message': constants.VARIABLE_NAME_EXISTS_IN_ITEM,
         'ariaMessage': constants.VARIABLE_NAME_EXISTS_IN_ITEM
       };
     } else if (startWithReservedWordsPattern.test(control.value)) {
       const msg = constants.getStartWithsErrorMessage(control.value);
-      return { 
+      return {
         'reservedWordsNameError': true,
         'message': msg,
         'ariaMessage': msg
-      };  
+      };
     } else if (reservedWordsPattern.test(control.value)) {
-      return { 
+      return {
         'reservedWordsNameError': true,
         'message': constants.VARIABLE_NAME_MATCHES_RESERVED_WORD,
         'ariaMessage': constants.VARIABLE_NAME_MATCHES_RESERVED_WORD

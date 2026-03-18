@@ -23,7 +23,7 @@
   </select>
 </label>
 
-@if (questionnaire != 'upload') {
+@if (questionnaire !== 'upload') {
   <span class="checkbox">
     <input type="checkbox" id="useRootLevel"
       aria-labelledby="rootLevelCheckboxLabel"
@@ -32,14 +32,14 @@
   </span>
 }
 
-@if (questionnaire != 'upload') {
+@if (questionnaire !== 'upload') {
   <label >
     Question:
     <input placeholder="Please select" class="query-autocomplete" #autoComplete id="question" />
   </label>
 }
 
-@if (questionnaire == 'upload') {
+@if (questionnaire === 'upload') {
   <div id="upload">
     <p>Please specify the questionnaire, item Link ID, and the corresponding Expression URI where the output should be placed:</p>
     <label>Questionnaire:

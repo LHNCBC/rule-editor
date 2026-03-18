@@ -12,7 +12,7 @@ export interface Variable {
   simple?: string;
   linkId?: string;
   unit?: string;
-  codes?: Array<string>;
+  codes?: string[];
   timeInterval?: number;
   timeIntervalUnit?: string;
 }

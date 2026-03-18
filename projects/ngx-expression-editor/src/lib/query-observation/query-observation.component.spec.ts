@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { QueryObservationComponent } from './query-observation.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
 
 describe('QueryObservationComponent', () => {
   let component: QueryObservationComponent;
@@ -12,8 +10,7 @@ describe('QueryObservationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [QueryObservationComponent, ExpressionValidatorDirective],
-      imports: [FormsModule],
+      imports: [QueryObservationComponent],
       providers: [provideHttpClient(withInterceptorsFromDi())]
     })
     .compileComponents();

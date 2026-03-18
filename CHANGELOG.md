@@ -2,6 +2,10 @@
 
 This project follows [Semantic Versioning](http://semver.org/).
 
+## [5.0.5] 2026-02-26
+### Changed
+- Converted Angular components to standalone and modernize code.
+
 ## [5.0.4] 2026-01-29
 ### Changed
 - Added a feature flag enabling collapsible behavior for the Uneditable Variables and Item Variables sections.

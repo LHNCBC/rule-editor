@@ -26,7 +26,7 @@ function getRequiredErrorMessage(type, field): string {
 }
 
 /**
- * Compose the Required error 
+ * Compose the Required error
  * @param type - variable type (fhirpath, query, queryObservation, question, simple)
  * @param field - field type (expression or timeInterval)
  * @returns Required error object
@@ -71,7 +71,7 @@ function getInvalidExpressionErrorObject(invalidVariableName = false): Validatio
  * @returns The updated message with the new variable name.
  */
 function replaceVariableName(message: string, newVariableName: string): string {
-  return message.replace(/launch context variable that/, `launch context variable \'${newVariableName}\' that`);
+  return message.replace(/launch context variable that/, `launch context variable '${newVariableName}' that`);
 }
 
 /**
@@ -101,12 +101,14 @@ export function expressionValidator(param: ValidationParam): ValidatorFn {
         try {
           // Use fhirpath.js to evaluate the expression.  If exception is thrown, then returns
           // the invalidExpressionError
-          const result = fhirpath.evaluate({}, control.value, JSON.parse(param.variableNames));
+          fhirpath.evaluate({}, control.value, JSON.parse(param.variableNames));
+
         } catch(e) {
           try {
             // Add a check to see if the expression contains a launch context variable that might
             // not have been defined. If that is the case, then return a warning.
-            const result2 = fhirpath.evaluate({}, control.value, JSON.parse(param.launchContext));
+            fhirpath.evaluate({}, control.value, JSON.parse(param.launchContext));
+
           } catch(e2) {
             return getInvalidExpressionErrorObject(true);
           }
@@ -115,7 +117,7 @@ export function expressionValidator(param: ValidationParam): ValidatorFn {
           const errorMessage = e.message;
           const match = errorMessage.match(/Attempting to access an undefined environment variable: (\w+)/);
           let variableName = '';
-          
+
           if (match && match[1]) {
             variableName = match[1];
           }
@@ -136,11 +138,11 @@ export function expressionValidator(param: ValidationParam): ValidatorFn {
 
         if (fhirPath === 'Not valid') {
             // If the failure occurs in the 'Output Expression' section but the
-            // expression itself has not been changed, the validation failure 
+            // expression itself has not been changed, the validation failure
             // likely due to the variable name in the 'Item Variables' section.
             const invalidVariableName = (param.section === SectionTypes.OutputExpression && !control.dirty);
             return getInvalidExpressionErrorObject(invalidVariableName);
-  
+
         } else if (fhirPath === '') {
           return getRequiredErrorObject(param.type, param.field);
         }

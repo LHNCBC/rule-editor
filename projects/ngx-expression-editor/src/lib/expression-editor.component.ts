@@ -5,6 +5,21 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ValidationResult } from './variable';
 import { ENVIRONMENT_TOKEN } from './environment-token';
 
+import { BaseDialogComponent } from './dialogs/base-dialog/base-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
+import { CaseStatementsComponent } from './case-statements/case-statements.component';
+import { VariablesComponent } from './variables/variables.component';
+import { UneditableVariablesComponent } from './uneditable-variables/uneditable-variables.component';
+import { SelectScoringItemsComponent } from './select-scoring-items/select-scoring-items.component';
+import { CalculateSumPromptComponent } from './calculate-sum-prompt/calculate-sum-prompt.component';
+import { SyntaxConverterComponent } from './syntax-converter/syntax-converter.component';
+import { CancelChangesConfirmationDialogComponent } from './dialogs/cancel-changes-confirmation-dialog/cancel-changes-confirmation-dialog.component';
+import { HelpsComponent } from './helps/helps.component';
+import { FhirpathEasypathConversionConfirmationDialogComponent } from './dialogs/fhirpath-easypath-conversion-confirmation-dialog/fhirpath-easypath-conversion-confirmation-dialog.component';
+import { ExpressionValidatorDirective } from '../directives/expression/expression-validator.directive';
+
 interface AppEnvironment {
   appName?: string;
 }
@@ -14,8 +29,16 @@ interface AppEnvironment {
   selector: 'lhc-expression-editor',
   templateUrl: 'expression-editor.component.html',
   styleUrls: ['expression-editor.component.css'],
+  imports: [ BaseDialogComponent, CommonModule, CalculateSumPromptComponent,
+             CancelChangesConfirmationDialogComponent, CaseStatementsComponent,
+             ExpressionValidatorDirective,
+             FhirpathEasypathConversionConfirmationDialogComponent,
+             FormsModule, HelpsComponent, MatTooltipModule,
+             SelectScoringItemsComponent, SyntaxConverterComponent,
+             UneditableVariablesComponent, VariablesComponent
+  ],
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false
+  providers: []
 })
 export class ExpressionEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() advancedInterface = true;
@@ -119,7 +142,8 @@ export class ExpressionEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
   };
 
-  private environment = inject<AppEnvironment>(ENVIRONMENT_TOKEN);
+  private environment = inject<AppEnvironment>(ENVIRONMENT_TOKEN, { optional: true }) as AppEnvironment | null;
+
   private variableService = inject(ExpressionEditorService);
   private liveAnnouncer = inject(LiveAnnouncer);
   private changeDetectorRef = inject(ChangeDetectorRef);

@@ -8,7 +8,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-type Env = {
+interface Env {
   production: boolean,
   appName: string,
   appTitle: string
