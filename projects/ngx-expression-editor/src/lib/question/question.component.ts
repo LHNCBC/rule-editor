@@ -4,6 +4,7 @@ import { ExpressionEditorService, SimpleStyle } from '../expression-editor.servi
 import { Unit, UNIT_CONVERSION } from '../units';
 import Def from 'autocomplete-lhc';
 import { FormsModule, NgModel } from '@angular/forms';
+import { AutocompleteMoreResultsGuard } from '../autocomplete-more-results-guard';
 
 import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
 import { SyntaxPreviewComponent } from '../syntax-preview/syntax-preview.component';
@@ -34,6 +35,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   unit: string;
   conversionOptions: Unit[];
   expression: string;
+  private moreResultsGuard: AutocompleteMoreResultsGuard | null = null;
 
   private variableService = inject(ExpressionEditorService);
 
@@ -56,7 +58,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // performValidationSubscription is triggered when the 'Save' button is clicked, allowing each
     // subscribed component to validate the expression data.
-    this.performValidationSubscription = this.variableService.performValidationChange.subscribe((validation) => {
+    this.performValidationSubscription = this.variableService.performValidationChange.subscribe(() => {
       this.onChange(true);
     });
   }
@@ -117,12 +119,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.onChange(true);
 
       });
+
+    this.moreResultsGuard = new AutocompleteMoreResultsGuard(
+      this.autoComplete,
+      this.autoCompleteElement.nativeElement,
+      `question-${this.index}`
+    );
+    this.moreResultsGuard.attach();
   }
 
   /**
    * Angular lifecycle hook
    */
   ngOnDestroy(): void {
+    this.moreResultsGuard?.detach();
+    this.moreResultsGuard = null;
+
     if (this.autoComplete !== undefined) {
       // This is required to clear all the tracking observers
       this.autoComplete.clearStoredSelection();

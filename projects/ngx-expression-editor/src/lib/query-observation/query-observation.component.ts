@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { FormsModule, NgModel } from '@angular/forms';
 import { ExpressionValidatorDirective } from '../../directives/expression/expression-validator.directive';
+import { AutocompleteMoreResultsGuard } from '../autocomplete-more-results-guard';
 
 @Component({
   selector: 'lhc-query-observation',
@@ -32,6 +33,7 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
   timeInterval: number;
   timeIntervalUnit: string;
   expression: string;
+  private moreResultsGuard: AutocompleteMoreResultsGuard | null = null;
 
   private http = inject(HttpClient);
   private expressionEditorService = inject(ExpressionEditorService);
@@ -65,7 +67,7 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
 
     // performValidationSubscription is triggered when the 'Save' button is clicked, allowing each
     // subscribed component to validate the expression data.
-    this.performValidationSubscription = this.expressionEditorService.performValidationChange.subscribe((validation) => {
+    this.performValidationSubscription = this.expressionEditorService.performValidationChange.subscribe(() => {
         this.onChange();
     });
   }
@@ -115,12 +117,22 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
       });
       this.onChange();
     });
+
+    this.moreResultsGuard = new AutocompleteMoreResultsGuard(
+      this.autoComplete,
+      this.autoCompleteElement.nativeElement,
+      `autocomplete-${this.index}`
+    );
+    this.moreResultsGuard.attach();
   }
 
   /**
    * Angular lifecycle hook
    */
   ngOnDestroy(): void {
+    this.moreResultsGuard?.detach();
+    this.moreResultsGuard = null;
+
     if (this.autoComplete !== undefined) {
       this.autoComplete.destroy();
     }
@@ -132,7 +144,7 @@ export class QueryObservationComponent implements OnInit, AfterViewInit, OnDestr
    * On changes update the expression and preview
    * @param expressionChange - true if there is a change in the expression input
    */
-  onChange(expressionChange: boolean = true): void {
+  onChange(expressionChange = true): void {
     delete this.variable.simple;
     delete this.variable.linkId;
 
