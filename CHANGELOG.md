@@ -2,6 +2,10 @@
 
 This project follows [Semantic Versioning](http://semver.org/).
 
+## [5.0.6] 2026-03-18
+### Fixed
+- Fixed autocomplete 'See more items' issue.
+
 ## [5.0.5] 2026-02-26
 ### Changed
 - Converted Angular components to standalone and modernize code.
