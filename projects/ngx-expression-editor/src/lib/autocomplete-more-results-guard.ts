@@ -11,10 +11,9 @@ interface AutocompleteWithMoreResults {
  */
 export class AutocompleteMoreResultsGuard {
   private moreResultsMouseDownListener: ((event: Event) => void) | null = null;
-  private moreResultsContainerMouseDownCaptureListener: ((event: Event) => void) | null = null;
   private suppressNextClickListener: ((event: Event) => void) | null = null;
+  private suppressNextClickTimeoutId: number | null = null;
   private moreResultsActionElement: HTMLElement | null = null;
-  private previousMoreResultsPointerEvents: string | null = null;
 
   /**
    * Creates a guard instance for a single autocomplete field.
@@ -51,34 +50,9 @@ export class AutocompleteMoreResultsGuard {
       return;
     }
 
-    // Bind the handler to an inner inline element so only the link text area
-    // is clickable (instead of the full width of #lhc-tools-moreResults).
+    // Ensure the row contains a consistent inline action element, but allow
+    // clicks anywhere in the row to expand results.
     this.moreResultsActionElement = this.ensureMoreResultsActionElement(moreResults);
-
-    // Make only the action text clickable; clicking blank area in the row should
-    // not trigger expansion.
-    this.previousMoreResultsPointerEvents = moreResults.style.pointerEvents || null;
-    moreResults.style.pointerEvents = 'none';
-    this.moreResultsActionElement.style.pointerEvents = 'auto';
-
-    // Block package-level expansion when users click blank space in the row.
-    // Only clicks within the inner action element should be allowed through.
-    this.moreResultsContainerMouseDownCaptureListener = (event: Event) => {
-      const composedPath = typeof event.composedPath === 'function' ? event.composedPath() : [];
-      const clickedAction = this.moreResultsActionElement
-        ? composedPath.includes(this.moreResultsActionElement)
-        : false;
-
-      if (clickedAction) {
-        return;
-      }
-
-      // Prevent the autocomplete-lhc listener on #lhc-tools-moreResults from
-      // treating the full row as clickable.
-      event.stopImmediatePropagation();
-    };
-
-    moreResults.addEventListener('mousedown', this.moreResultsContainerMouseDownCaptureListener, true);
 
     this.moreResultsMouseDownListener = (event: Event) => {
       // Only handle for the active field to avoid cross-triggering when
@@ -110,7 +84,7 @@ export class AutocompleteMoreResultsGuard {
       });
     };
 
-    this.moreResultsActionElement.addEventListener('mousedown', this.moreResultsMouseDownListener);
+    moreResults.addEventListener('mousedown', this.moreResultsMouseDownListener);
   }
 
   /**
@@ -133,23 +107,14 @@ export class AutocompleteMoreResultsGuard {
       return;
     }
 
-    if (this.moreResultsActionElement) {
-      this.moreResultsActionElement.removeEventListener('mousedown', this.moreResultsMouseDownListener);
-    }
-
     const moreResults = (this.autoComplete.listContainer as HTMLElement)
       .querySelector('#lhc-tools-moreResults') as HTMLElement | null;
 
-    if (moreResults && this.moreResultsContainerMouseDownCaptureListener) {
-      moreResults.removeEventListener('mousedown', this.moreResultsContainerMouseDownCaptureListener, true);
+    if (moreResults) {
+      moreResults.removeEventListener('mousedown', this.moreResultsMouseDownListener);
     }
 
     this.moreResultsMouseDownListener = null;
-    this.moreResultsContainerMouseDownCaptureListener = null;
-    if (moreResults) {
-      moreResults.style.pointerEvents = this.previousMoreResultsPointerEvents ?? '';
-    }
-    this.previousMoreResultsPointerEvents = null;
     this.moreResultsActionElement = null;
   }
 
@@ -197,6 +162,10 @@ export class AutocompleteMoreResultsGuard {
       this.detachSuppressNextClickListener();
     };
 
+    this.suppressNextClickTimeoutId = window.setTimeout(() => {
+      this.detachSuppressNextClickListener();
+    }, 200);
+
     document.addEventListener('click', this.suppressNextClickListener, true);
   }
 
@@ -206,11 +175,14 @@ export class AutocompleteMoreResultsGuard {
    * @returns void
    */
   private detachSuppressNextClickListener(): void {
-    if (!this.suppressNextClickListener) {
-      return;
+    if (this.suppressNextClickListener) {
+      document.removeEventListener('click', this.suppressNextClickListener, true);
+      this.suppressNextClickListener = null;
     }
 
-    document.removeEventListener('click', this.suppressNextClickListener, true);
-    this.suppressNextClickListener = null;
+    if (this.suppressNextClickTimeoutId !== null) {
+      window.clearTimeout(this.suppressNextClickTimeoutId);
+      this.suppressNextClickTimeoutId = null;
+    }
   }
 }
