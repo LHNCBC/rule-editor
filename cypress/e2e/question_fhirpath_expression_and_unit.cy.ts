@@ -1,3 +1,5 @@
+import { autocompleteSearchAndExpand } from './utils';
+
 describe('Expression editor', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -36,7 +38,7 @@ describe('Expression editor', () => {
 
   describe('Angular Library', () => {
     describe('Question variable type', () => {
-      
+
       it('should update the FHIRPath expression and its associated factor when the unit changes', () => {
         cy.get('lhc-expression-editor').shadow().within(() => {
           cy.get('#expression-editor-base-dialog').should('exist');
@@ -58,7 +60,7 @@ describe('Expression editor', () => {
               cy.get('div.fhirpath > pre')
                 .should('contain.text',
                   "%resource.item.where(linkId='/29463-7').answer.value");
-                
+
               // Change the unit to 'Convert to lbs.'
               cy.get('div.unit-select > select').select('lbs');
               // The FHIRPath expression should get updated
@@ -71,7 +73,7 @@ describe('Expression editor', () => {
               // The FHIRPath expression should get updated
               cy.get('div.fhirpath > pre')
                 .should('contain.text',
-                  "%resource.item.where(linkId='/29463-7').answer.value");            
+                  "%resource.item.where(linkId='/29463-7').answer.value");
           });
         });
       });
@@ -151,6 +153,58 @@ describe('Expression editor', () => {
           });
         });
       });
+    });
+  });
+});
+
+describe('Expression editor - question autocomplete expansion', () => {
+  it('should expand question autocomplete via "See more items" and Ctrl+Enter without closing dialogs', () => {
+    cy.visit('/');
+
+    cy.get('select#questionnaire-select').select('Upload your own questionnaire');
+    cy.get('#file-upload').attachFile('bmi_many_questions.json');
+
+    // Use item-level expression editor so question context is available.
+    cy.get('#root-level').should('be.checked').uncheck();
+    cy.get('#question').clear().type('BMI');
+    cy.get('span#completionOptions > ul > li').contains('39156-5').click();
+
+    cy.get('button#openExpressionEditor').should('exist').click();
+
+    cy.get('lhc-expression-editor').shadow().within(() => {
+      cy.get('#expression-editor-base-dialog').should('exist');
+
+      cy.get('#variables-section .variable-row').its('length').then((count) => {
+        cy.get('#add-variable').click();
+        cy.get('#variables-section .variable-row').should('have.length', count + 1);
+        cy.get('#variables-section .variable-row').last().invoke('attr', 'id').as('newRowId');
+      });
+    });
+
+    cy.get('@newRowId').then((rowIdRaw) => {
+      const rowId = String(rowIdRaw);
+      const rowIndex = rowId.replace('row-', '');
+      cy.wrap(rowIndex).as('newRowIndex');
+
+      cy.get('lhc-expression-editor').shadow().within(() => {
+        cy.get(`div#${rowId}`).within(() => {
+          cy.get(`#variable-type-${rowIndex}`).select('Question');
+          cy.get(`#question-${rowIndex}`).should('exist').clear().type('Body');
+        });
+      });
+    });
+
+    cy.get('@newRowIndex').then((rowIndexRaw) => {
+      autocompleteSearchAndExpand('link', 'question', String(rowIndexRaw), 'Body');
+    });
+
+    // Hide search results by clicking outside of the autocomplete results box.
+    cy.get('body').click(5, 5);
+    cy.get('#lhc-tools-searchResults').should('have.attr', 'aria-hidden', 'true');
+
+    // Repeat the same search and expand with Ctrl+Enter instead of the link.
+    cy.get('@newRowIndex').then((rowIndexRaw) => {
+      autocompleteSearchAndExpand('ctrlEnter', 'question', String(rowIndexRaw), 'Body');
     });
   });
 });

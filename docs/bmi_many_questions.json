@@ -1,0 +1,362 @@
+{
+  "id": "55418-8-many-x",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-03-18T00:00:00.000-05:00",
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ],
+    "tag": [
+      {
+        "code": "lformsVersion: 28.1.1"
+      }
+    ]
+  },
+  "date": "2018-09-12T18:03:40-04:00",
+  "identifier": [
+    {
+      "system": "http://loinc.org",
+      "value": "55418-8-many"
+    }
+  ],
+  "code": [
+    {
+      "system": "http://loinc.org",
+      "code": "55418-8",
+      "display": "Weight and Height tracking panel (many items)"
+    }
+  ],
+  "subjectType": [
+    "Patient"
+  ],
+  "status": "draft",
+  "name": "weight_height_tracking_panel_many",
+  "title": "Weight & Height tracking panel (many items)",
+  "resourceType": "Questionnaire",
+  "item": [
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "29463-7",
+          "display": "Weight"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "kg",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/29463-7",
+      "text": "Weight"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "8302-2",
+          "display": "Body height"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "[in_i]",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/8302-2",
+      "text": "Body height"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90001-1",
+          "display": "Body circumference"
+        }
+      ],
+      "required": false,
+      "linkId": "/90001-1",
+      "text": "Body circumference"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90002-2",
+          "display": "Body composition"
+        }
+      ],
+      "required": false,
+      "linkId": "/90002-2",
+      "text": "Body composition"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90003-3",
+          "display": "Body surface area"
+        }
+      ],
+      "required": false,
+      "linkId": "/90003-3",
+      "text": "Body surface area"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90004-4",
+          "display": "Body fat percentage"
+        }
+      ],
+      "required": false,
+      "linkId": "/90004-4",
+      "text": "Body fat percentage"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90005-5",
+          "display": "Body mass index trend"
+        }
+      ],
+      "required": false,
+      "linkId": "/90005-5",
+      "text": "Body mass index trend"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90006-6",
+          "display": "Body water estimate"
+        }
+      ],
+      "required": false,
+      "linkId": "/90006-6",
+      "text": "Body water estimate"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90007-7",
+          "display": "Body frame score"
+        }
+      ],
+      "required": false,
+      "linkId": "/90007-7",
+      "text": "Body frame score"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90008-8",
+          "display": "Body posture scale"
+        }
+      ],
+      "required": false,
+      "linkId": "/90008-8",
+      "text": "Body posture scale"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90009-9",
+          "display": "Body mobility score"
+        }
+      ],
+      "required": false,
+      "linkId": "/90009-9",
+      "text": "Body mobility score"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90010-0",
+          "display": "Body hydration ratio"
+        }
+      ],
+      "required": false,
+      "linkId": "/90010-0",
+      "text": "Body hydration ratio"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90011-1",
+          "display": "Body lean mass"
+        }
+      ],
+      "required": false,
+      "linkId": "/90011-1",
+      "text": "Body lean mass"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90012-2",
+          "display": "Body muscle quality"
+        }
+      ],
+      "required": false,
+      "linkId": "/90012-2",
+      "text": "Body muscle quality"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90013-3",
+          "display": "Body fat-free mass"
+        }
+      ],
+      "required": false,
+      "linkId": "/90013-3",
+      "text": "Body fat-free mass"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90014-4",
+          "display": "Body shape index"
+        }
+      ],
+      "required": false,
+      "linkId": "/90014-4",
+      "text": "Body shape index"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90015-5",
+          "display": "Body energy reserve"
+        }
+      ],
+      "required": false,
+      "linkId": "/90015-5",
+      "text": "Body energy reserve"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90016-6",
+          "display": "Body oxygen demand"
+        }
+      ],
+      "required": false,
+      "linkId": "/90016-6",
+      "text": "Body oxygen demand"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90017-7",
+          "display": "Body tissue density"
+        }
+      ],
+      "required": false,
+      "linkId": "/90017-7",
+      "text": "Body tissue density"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "90018-8",
+          "display": "Body metabolic reserve"
+        }
+      ],
+      "required": false,
+      "linkId": "/90018-8",
+      "text": "Body metabolic reserve"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "39156-5",
+          "display": "BMI"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
+          "valueExpression": {
+            "name": "a",
+            "language": "text/fhirpath",
+            "expression": "%resource.item.where(linkId='/29463-7').answer.value"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
+          "valueExpression": {
+            "name": "b",
+            "language": "text/fhirpath",
+            "expression": "%resource.item.where(linkId='/8302-2').answer.value*0.0254"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "description": "BMI calculation",
+            "language": "text/fhirpath",
+            "expression": "(%a/(%b.power(2))).round(1)"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "kg/m2",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/39156-5",
+      "text": "BMI"
+    }
+  ]
+}
