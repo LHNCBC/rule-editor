@@ -246,17 +246,17 @@ export class ExpressionEditorComponent implements OnInit, OnChanges, OnDestroy {
     // performValidationSubscription is triggered when the 'Save' button is clicked, allowing each
     // subscribed component to validate the expression data.
     this.performValidationSubscription = this.variableService.performValidationChange.subscribe((validation) => {
-      // By setting the setValue to blank on simple expression that is null, empty, or undefined,
-      // it would force the validation to occurs.
-      if (this.expressionSyntax === "fhirpath" && this.finalExpression === "" && this.display.outputExpressionSection) {
-        this.expRef.control.markAsTouched();
-        this.expRef.control.markAsDirty();
-        this.expRef.control.setValue("");
-      } else if (this.finalExpression) {
-        this.expRef.control.markAsTouched();
-        this.expRef.control.markAsDirty();
-        this.expRef.control.setValue(this.finalExpression);
+      // The output expression textarea exists only in FHIRPath mode.
+      // In Easy Path mode, validation is handled by child components.
+      const expressionControl = this.expRef?.control;
+      // This branch only validates the final output textarea in FHIRPath mode.
+      if (!expressionControl || this.expressionSyntax !== "fhirpath" || !this.display.outputExpressionSection) {
+        return;
       }
+
+      expressionControl.markAsTouched();
+      expressionControl.markAsDirty();
+      expressionControl.setValue(this.finalExpression ?? "");
     });
   }
 

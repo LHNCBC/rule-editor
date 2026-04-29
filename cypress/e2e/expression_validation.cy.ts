@@ -6,6 +6,25 @@ describe(Cypress.env("appName"), () => {
   });
 
   describe('Angular Library', () => {
+    it('should save BMI Easy Path expression without throwing control undefined error', () => {
+      cy.get('select#questionnaire-select').select('BMI Calculation (Easy Path expression)');
+
+      cy.get('button#openExpressionEditor').should('exist').click();
+
+      cy.get('lhc-expression-editor').shadow().within(() => {
+        cy.get('#expression-editor-base-dialog').should('exist');
+
+        // Repro path: scroll to bottom, then click Save.
+        cy.get('#export').scrollIntoView().should('be.visible').click();
+      });
+
+      // Save should complete and close the editor.
+      cy.get('lhc-expression-editor').should('not.exist');
+
+      // If the previous TypeError occurs, the test will fail before this point.
+      cy.get('pre#output').invoke('text').should('not.equal', '');
+    });
+
     describe('Item Variables section', () => {
       it('should display error and disable "Save" button if expression is empty', () => {
         cy.get('select#questionnaire-select').select('BMI Calculation (Easy Path expression)');
