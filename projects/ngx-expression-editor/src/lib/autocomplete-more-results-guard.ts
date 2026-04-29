@@ -84,7 +84,9 @@ export class AutocompleteMoreResultsGuard {
       });
     };
 
-    moreResults.addEventListener('mousedown', this.moreResultsMouseDownListener);
+    // Use capture phase so this handler runs before bubble-phase dialog/autocomplete
+    // handlers that can reset state and trigger a null `autocomp` access.
+    moreResults.addEventListener('mousedown', this.moreResultsMouseDownListener, true);
   }
 
   /**
@@ -111,7 +113,7 @@ export class AutocompleteMoreResultsGuard {
       .querySelector('#lhc-tools-moreResults') as HTMLElement | null;
 
     if (moreResults) {
-      moreResults.removeEventListener('mousedown', this.moreResultsMouseDownListener);
+      moreResults.removeEventListener('mousedown', this.moreResultsMouseDownListener, true);
     }
 
     this.moreResultsMouseDownListener = null;
