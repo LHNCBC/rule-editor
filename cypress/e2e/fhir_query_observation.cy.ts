@@ -126,6 +126,10 @@ describe(Cypress.env("appName"), () => {
         cy.get('select#questionnaire-select').select('BMI Variable Type');
         cy.wait('@bmivariable');
 
+        cy.window().then((win) => {
+          cy.spy(win.console, 'error').as('consoleError');
+        });
+
         cy.get('button#openExpressionEditor').should('exist').click();
 
         autocompleteSearchAndExpand('link', 'queryObservation', '11', 'Retinol');
@@ -142,6 +146,15 @@ describe(Cypress.env("appName"), () => {
 
         cy.wait('@loincExpanded');
         cy.get('#completionOptions table tbody tr').contains('Retinol Expanded 12').should('be.visible');
+
+        cy.get('@consoleError').should((consoleErrorSpy) => {
+          const autocompNullError = "Cannot read properties of null (reading 'autocomp')";
+          const hasAutocompNullError = consoleErrorSpy
+            .getCalls()
+            .some((call) => call.args.some((arg) => String(arg).includes(autocompNullError)));
+
+          expect(hasAutocompNullError, 'autocomp null console error should not occur').to.eq(false);
+        });
       });
     });
   });

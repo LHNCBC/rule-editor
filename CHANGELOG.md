@@ -5,6 +5,7 @@ This project follows [Semantic Versioning](http://semver.org/).
 ## [5.0.7] 2026-04-27
 ### Fixed
 - Fixed a Save error in the Easy Path flow when the Output Expression FHIRPath control is not rendered.
+- Fixed an autocomplete exception (`Cannot read properties of null (reading 'autocomp')`) triggered when expanding results with "See more items".
 
 ## [5.0.6] 2026-03-18
 ### Fixed

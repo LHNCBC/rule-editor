@@ -161,6 +161,10 @@ describe('Expression editor - question autocomplete expansion', () => {
   it('should expand question autocomplete via "See more items" and Ctrl+Enter without closing dialogs', () => {
     cy.visit('/');
 
+    cy.window().then((win) => {
+      cy.spy(win.console, 'error').as('consoleError');
+    });
+
     cy.get('select#questionnaire-select').select('Upload your own questionnaire');
     cy.get('#file-upload').attachFile('bmi_many_questions.json');
 
@@ -205,6 +209,15 @@ describe('Expression editor - question autocomplete expansion', () => {
     // Repeat the same search and expand with Ctrl+Enter instead of the link.
     cy.get('@newRowIndex').then((rowIndexRaw) => {
       autocompleteSearchAndExpand('ctrlEnter', 'question', String(rowIndexRaw), 'Body');
+    });
+
+    cy.get('@consoleError').should((consoleErrorSpy) => {
+      const autocompNullError = "Cannot read properties of null (reading 'autocomp')";
+      const hasAutocompNullError = consoleErrorSpy
+        .getCalls()
+        .some((call) => call.args.some((arg) => String(arg).includes(autocompNullError)));
+
+      expect(hasAutocompNullError, 'autocomp null console error should not occur').to.eq(false);
     });
   });
 });
